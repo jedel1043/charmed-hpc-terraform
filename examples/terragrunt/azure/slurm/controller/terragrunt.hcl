@@ -6,8 +6,8 @@
 # Azure credentials come from the environment:
 #   ARM_CLIENT_ID, ARM_SUBSCRIPTION_ID, ARM_CLIENT_SECRET
 #
-# The module's `connection` and `juju_cli_setup_command` outputs are read
-# directly by the dependency block in the parent plan.
+# The module's `connection` output is read directly by the dependency block
+# in the parent plan.
 
 terraform {
   source = "../../../../..//modules/controller"
@@ -28,6 +28,11 @@ generate "providers" {
 inputs = {
   name           = "charmed-hpc"
   bootstrap_base = "ubuntu@24.04"
+
+  # Write the controller module's Juju data files into the gitignored
+  # Terragrunt cache, so the juju_data_dir output gives a pre-authenticated
+  # JUJU_DATA for the Juju CLI (see the README).
+  juju_data_dir = "${get_terragrunt_dir()}/.terragrunt-cache/juju-data"
 
   cloud = {
     name       = "azure"

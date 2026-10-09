@@ -41,28 +41,26 @@ registered with the local Juju client, read directly from
 
 ## Accessing the controller with the Juju CLI
 
-The controller unit writes a minimal `controllers.yaml` to
-`.terraform/juju-data/controllers.yaml` and outputs a ready-to-use setup
-command. After `terragrunt run --all apply` completes, get interactive CLI
-access to the controller with:
+The controller unit points the controller module's `juju_data_dir` input at a
+directory in the gitignored Terragrunt cache. After `terragrunt run --all apply`
+completes, get interactive CLI access to the controller by setting the
+`JUJU_DATA` environment variable to that directory:
 
 ```shell
 cd examples/terragrunt/lxd/lustre/controller   # or lxd/slurm/controller
 
-# Fetch the admin password (only required once)
-terragrunt output -json connection | jq -r .password
+export JUJU_DATA="$(terragrunt output -raw juju_data_dir)"
 
-# Set up a temporary JUJU_DATA and log in (use -raw to avoid JSON escaping)
-eval "$(terragrunt output -raw juju_cli_setup_command)"
-
-# Verify access
+# Verify access (switch to a model first: a fresh data directory has no
+# current model)
+juju switch admin/controller
 juju status
 juju debug-log
 ```
 
 The `JUJU_DATA` points at a temporary directory containing only the
-controller's `controllers.yaml`, so your persistent `~/.local/share/juju`
-config is untouched.
+generated `controllers.yaml` and `accounts.yaml`, so your persistent
+`~/.local/share/juju` config is untouched.
 
 ## Tearing down
 

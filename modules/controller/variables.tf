@@ -55,6 +55,19 @@ variable "juju_binary" {
   nullable    = false
 }
 
+variable "juju_data_dir" {
+  description = <<-EOT
+    Directory where the Juju data files (controllers.yaml and accounts.yaml) are
+    written. Setting this variable opts in to writing them: point the JUJU_DATA
+    environment variable at the directory to use the Juju CLI with the
+    controller. If null, no Juju data files are written and only the connection
+    outputs are available. Existing files with the same names are overwritten.
+  EOT
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "bootstrap_base" {
   description = "Base operating system for the bootstrap machine."
   type        = string

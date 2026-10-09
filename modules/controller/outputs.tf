@@ -40,9 +40,9 @@ output "ca_cert" {
   sensitive   = true
 }
 
-output "juju_cli_setup_command" {
-  description = "Command to set up temporary Juju CLI access to the controller."
-  value       = "export JUJU_DATA=${abspath(dirname(local_sensitive_file.juju-controllers-yaml.filename))} && juju login -c ${var.name} -u admin --trust"
+output "juju_data_dir" {
+  description = "Path to the Juju data directory with the controller registered and the admin user already logged in."
+  value       = var.juju_data_dir != null ? abspath(var.juju_data_dir) : null
   sensitive   = true
 }
 

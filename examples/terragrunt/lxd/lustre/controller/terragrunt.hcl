@@ -11,11 +11,12 @@
 # active controller and fails after switching to another controller.
 #
 # $JUJU_DATA is deliberately not honored here: the controller module's
-# temporary JUJU_DATA (see its juju_cli_setup_command output) contains no
-# credentials, so honoring it would break plans run inside that environment.
+# temporary JUJU_DATA (see its juju_data_dir output) contains no cloud
+# credentials (credentials.yaml), so honoring it would break plans run inside
+# that environment.
 #
-# The module's `connection` and `juju_cli_setup_command` outputs are read
-# directly by the dependency block in the parent plan.
+# The module's `connection` output is read directly by the dependency block
+# in the parent plan.
 
 terraform {
   source = "../../../../..//modules/controller"
@@ -51,6 +52,11 @@ locals {
 inputs = {
   name           = "charmed-hpc"
   bootstrap_base = "ubuntu@24.04"
+
+  # Write the controller module's Juju data files into the gitignored
+  # Terragrunt cache, so the juju_data_dir output gives a pre-authenticated
+  # JUJU_DATA for the Juju CLI (see the README).
+  juju_data_dir = "${get_terragrunt_dir()}/.terragrunt-cache/juju-data"
 
   cloud = {
     name       = "localhost"

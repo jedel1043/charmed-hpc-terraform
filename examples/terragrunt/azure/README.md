@@ -83,28 +83,29 @@ export ARM_TENANT_ID=$(az account show --query tenantId -o tsv)
 
 ## Accessing the controller with the Juju CLI
 
-The controller unit writes a minimal `controllers.yaml` to
-`.terraform/juju-data/controllers.yaml` and outputs a ready-to-use setup
-command. After `terragrunt run --all apply` completes, get interactive CLI
-access to the controller with:
+The controller unit points the controller module's `juju_data_dir` input at a
+directory in the gitignored Terragrunt cache. The module writes a minimal Juju
+data directory there — a `controllers.yaml` registering the controller and an
+`accounts.yaml` with the admin credentials, so the client is pre-authenticated
+— and outputs its path as `juju_data_dir`. After `terragrunt run --all apply`
+completes, get interactive CLI access to the controller by pointing the
+`JUJU_DATA` environment variable at that directory:
 
 ```shell
 cd examples/terragrunt/azure/lustre/controller   # or azure/slurm/controller
 
-# Fetch the admin password (only required once)
-terragrunt output -json connection | jq -r .password
+export JUJU_DATA="$(terragrunt output -raw juju_data_dir)"
 
-# Set up a temporary JUJU_DATA and log in (use -raw to avoid JSON escaping)
-eval "$(terragrunt output -raw juju_cli_setup_command)"
-
-# Verify access
+# Verify access (switch to a model first: a fresh data directory has no
+# current model)
+juju switch admin/controller
 juju status
 juju debug-log
 ```
 
 The `JUJU_DATA` points at a temporary directory containing only the
-controller's `controllers.yaml`, so your persistent `~/.local/share/juju`
-config is untouched.
+generated `controllers.yaml` and `accounts.yaml`, so your persistent
+`~/.local/share/juju` config is untouched.
 
 ## Tearing down
 

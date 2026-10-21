@@ -12,6 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+output "compute_partitions" {
+  description = "Information about the Slurm compute partitions."
+  value = {
+    for key, value in module.slurmd_partitions : key => {
+      app_name = value.application.name,
+      provides = value.provides
+    }
+  }
+}
+
 output "controller" {
   description = "Information about the Slurm controller application."
   value = {
@@ -19,6 +29,7 @@ output "controller" {
     requires = module.slurmctld.requires
   }
 }
+
 output "database" {
   description = "Information about the Slurm database application."
   value = {
@@ -27,13 +38,7 @@ output "database" {
     requires = module.slurmdbd.requires
   }
 }
-output "rest_api" {
-  description = "Information about the Slurm REST API application."
-  value = {
-    app_name = module.slurmrestd.application.name
-    provides = module.slurmrestd.provides
-  }
-}
+
 output "kiosk" {
   description = "Information about the Slurm kiosk application."
   value = {
@@ -42,12 +47,10 @@ output "kiosk" {
   }
 }
 
-output "compute_partitions" {
-  description = "Information about the Slurm compute partitions."
+output "rest_api" {
+  description = "Information about the Slurm REST API application."
   value = {
-    for key, value in module.slurmd_partitions : key => {
-      app_name = value.application.name,
-      provides = value.provides
-    }
+    app_name = module.slurmrestd.application.name
+    provides = module.slurmrestd.provides
   }
 }

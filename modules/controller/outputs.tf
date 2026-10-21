@@ -12,37 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "controller_uuid" {
-  description = "UUID of the bootstrapped controller."
-  value       = juju_controller.this.controller_uuid
-}
-
 output "api_addresses" {
   description = "API addresses of the controller."
   value       = juju_controller.this.api_addresses
 }
 
-output "username" {
-  description = "Admin username for the controller."
-  value       = juju_controller.this.username
-  sensitive   = true
-}
-
-output "password" {
-  description = "Admin password for the controller."
-  value       = juju_controller.this.password
-  sensitive   = true
-}
-
 output "ca_cert" {
   description = "CA certificate for the controller."
   value       = juju_controller.this.ca_cert
-  sensitive   = true
-}
-
-output "juju_data_dir" {
-  description = "Path to the Juju data directory with the controller registered and the admin user already logged in."
-  value       = var.juju_data_dir != null ? abspath(var.juju_data_dir) : null
   sensitive   = true
 }
 
@@ -55,4 +32,27 @@ output "connection" {
     ca_certificate       = juju_controller.this.ca_cert
   }
   sensitive = true
+}
+
+output "controller_uuid" {
+  description = "UUID of the bootstrapped controller."
+  value       = juju_controller.this.controller_uuid
+}
+
+output "juju_data_dir" {
+  description = "Path to the Juju data directory with the controller registered and the admin user already logged in."
+  value       = var.juju_data_dir != null ? abspath(var.juju_data_dir) : null
+  sensitive   = true
+}
+
+output "password" {
+  description = "Admin password for the controller."
+  value       = juju_controller.this.password
+  sensitive   = true
+}
+
+output "username" {
+  description = "Admin username for the controller."
+  value       = juju_controller.this.username
+  sensitive   = true
 }

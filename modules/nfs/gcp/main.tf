@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-locals {
-  share_name = replace(substr(var.name, 0, 10), "-", "_")
-}
-
 resource "google_filestore_instance" "nfs" {
   name     = "${var.name}-filestore"
   location = var.location

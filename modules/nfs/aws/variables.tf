@@ -12,25 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
+variable "base" {
+  description = "Base operating system to deploy the NFS charms on."
   type        = string
-  default     = "nfs-share"
-  description = "Name for the exported NFS share and the prefix of all the related resources."
+  default     = "ubuntu@26.04"
+  nullable    = false
 }
 
-variable "vpc_id" {
+variable "filesystem_client_channel" {
+  description = "Channel to deploy the filesystem-client charm from."
   type        = string
-  description = "VPC ID for the resources created."
-}
-
-variable "subnet_id" {
-  description = "Subnet ID where the NFS share will be allocated."
-  type        = string
-}
-
-variable "mountpoint" {
-  description = "Path to the directory where the NFS share will be mounted."
-  type        = string
+  default     = "latest/edge"
 }
 
 variable "model_uuid" {
@@ -39,11 +31,15 @@ variable "model_uuid" {
   nullable    = false
 }
 
-variable "base" {
-  description = "Base operating system to deploy the NFS charms on."
+variable "mountpoint" {
+  description = "Path to the directory where the NFS share will be mounted."
   type        = string
-  default     = "ubuntu@26.04"
-  nullable    = false
+}
+
+variable "name" {
+  type        = string
+  default     = "nfs-share"
+  description = "Name for the exported NFS share and the prefix of all the related resources."
 }
 
 variable "nfs_server_proxy_channel" {
@@ -52,8 +48,12 @@ variable "nfs_server_proxy_channel" {
   default     = "latest/edge"
 }
 
-variable "filesystem_client_channel" {
-  description = "Channel to deploy the filesystem-client charm from."
+variable "subnet_id" {
+  description = "Subnet ID where the NFS share will be allocated."
   type        = string
-  default     = "latest/edge"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID for the resources created."
 }

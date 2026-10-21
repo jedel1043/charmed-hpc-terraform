@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-locals {
-  create_machines = length(var.server.machines) == 0
-}
-
 module "lustre-server" {
   source = "git::https://github.com/canonical/filesystem-charms//charms/lustre-server/terraform?ref=0a49f1705d62e4fbb8c52360ad4b2372e8b64214"
 

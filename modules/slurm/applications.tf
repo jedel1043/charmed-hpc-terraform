@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-locals {
-  controller_machines = length(var.controller.machines) == 0
-  database_machines   = length(var.database.machines) == 0
-  rest_api_machines   = length(var.rest_api.machines) == 0
-  kiosk_machines      = length(var.kiosk.machines) == 0
-}
-
 # slurmdbd and slurmrestd do not support HA setups
 resource "terraform_data" "single_unit_services" {
   lifecycle {
@@ -90,62 +83,6 @@ module "sackd" {
   constraints = var.kiosk.constraints
 }
 
-resource "juju_integration" "sackd-to-slurmctld" {
-  model_uuid = var.model_uuid
-
-  application {
-    name     = module.sackd.application.name
-    endpoint = module.sackd.provides.slurmctld
-  }
-
-  application {
-    name     = module.slurmctld.application.name
-    endpoint = module.slurmctld.requires.sackd
-  }
-}
-
-resource "juju_integration" "slurmdbd-to-slurmctld" {
-  model_uuid = var.model_uuid
-
-  application {
-    name     = module.slurmdbd.application.name
-    endpoint = module.slurmdbd.provides.slurmctld
-  }
-
-  application {
-    name     = module.slurmctld.application.name
-    endpoint = module.slurmctld.requires.slurmdbd
-  }
-}
-
-resource "juju_integration" "slurmrestd-to-slurmctld" {
-  model_uuid = var.model_uuid
-
-  application {
-    name     = module.slurmrestd.application.name
-    endpoint = module.slurmrestd.provides.slurmctld
-  }
-
-  application {
-    name     = module.slurmctld.application.name
-    endpoint = module.slurmctld.requires.slurmrestd
-  }
-}
-
-resource "juju_integration" "slurmdbd-to-mysql" {
-  model_uuid = var.model_uuid
-
-  application {
-    name     = module.slurmdbd.application.name
-    endpoint = module.slurmdbd.requires.database
-  }
-
-  application {
-    name     = var.database_backend.name
-    endpoint = var.database_backend.endpoint
-  }
-}
-
 # Setup compute plane
 
 module "slurmd_partitions" {
@@ -161,19 +98,4 @@ module "slurmd_partitions" {
   units       = length(each.value.machines) == 0 ? coalesce(each.value.units, 1) : null
   config      = each.value.config
   constraints = each.value.constraints
-}
-
-resource "juju_integration" "slurmd-to-slurmctld" {
-  for_each   = module.slurmd_partitions
-  model_uuid = var.model_uuid
-
-  application {
-    name     = each.value.application.name
-    endpoint = each.value.provides.slurmctld
-  }
-
-  application {
-    name     = module.slurmctld.application.name
-    endpoint = module.slurmctld.requires.slurmd
-  }
 }

@@ -12,9 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
-  description = "Name to assign to the controller."
+variable "agent_version" {
+  description = "Controller agent version to bootstrap. If null, the latest stable version is used."
   type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "bootstrap_base" {
+  description = "Base operating system for the bootstrap machine."
+  type        = string
+  default     = "ubuntu@24.04"
+  nullable    = false
+}
+
+variable "bootstrap_constraints" {
+  description = "Constraints for the bootstrap machine."
+  type        = map(string)
+  default     = {}
   nullable    = false
 }
 
@@ -48,6 +63,13 @@ variable "cloud_credential" {
   sensitive = true
 }
 
+variable "controller_config" {
+  description = "Configuration options for the bootstrapped controller."
+  type        = map(string)
+  default     = {}
+  nullable    = false
+}
+
 variable "juju_binary" {
   description = "Path to the Juju CLI binary. Use /snap/juju/current/bin/juju when Juju is installed as a snap."
   type        = string
@@ -68,30 +90,8 @@ variable "juju_data_dir" {
   nullable    = true
 }
 
-variable "bootstrap_base" {
-  description = "Base operating system for the bootstrap machine."
+variable "name" {
+  description = "Name to assign to the controller."
   type        = string
-  default     = "ubuntu@24.04"
-  nullable    = false
-}
-
-variable "agent_version" {
-  description = "Controller agent version to bootstrap. If null, the latest stable version is used."
-  type        = string
-  default     = null
-  nullable    = true
-}
-
-variable "bootstrap_constraints" {
-  description = "Constraints for the bootstrap machine."
-  type        = map(string)
-  default     = {}
-  nullable    = false
-}
-
-variable "controller_config" {
-  description = "Configuration options for the bootstrapped controller."
-  type        = map(string)
-  default     = {}
   nullable    = false
 }

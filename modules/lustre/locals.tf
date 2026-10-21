@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  required_version = ">= 1.6.6"
-
-  required_providers {
-    juju = {
-      source  = "juju/juju"
-      version = "~> 1.0"
-    }
-  }
+locals {
+  create_machines = length(var.server.machines) == 0
 }

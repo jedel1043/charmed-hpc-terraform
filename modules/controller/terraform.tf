@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ terraform {
   required_providers {
     juju = {
       source  = "juju/juju"
-      version = "~> 1.0"
+      version = ">= 1.0, < 3.0"
     }
-    google = {
-      source  = "hashicorp/google"
-      version = "~>6.41"
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.5"
     }
   }
 }

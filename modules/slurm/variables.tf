@@ -30,6 +30,9 @@ variable "compute_partitions" {
   description = "Map of Slurm compute partitions to deploy."
   type = map(
     object({
+      base        = optional(string),
+      channel     = optional(string),
+      revision    = optional(number),
       units       = optional(number),
       config      = optional(map(string)),
       constraints = optional(string),
@@ -46,31 +49,33 @@ variable "compute_partitions" {
 variable "controller" {
   description = "Configuration options for the Slurm controller node."
   type = object({
-    app_name    = optional(string),
+    app_name    = optional(string, "controller"),
+    base        = optional(string),
+    channel     = optional(string),
+    revision    = optional(number),
     units       = optional(number),
     config      = optional(map(string)),
     constraints = optional(string),
     machines    = optional(list(string), [])
   })
   nullable = false
-  default = {
-    app_name = "controller"
-  }
+  default  = {}
 }
 
 variable "database" {
   description = "Configuration options for the Slurm database node."
   type = object({
-    app_name    = optional(string),
+    app_name    = optional(string, "database"),
+    base        = optional(string),
+    channel     = optional(string),
+    revision    = optional(number),
     units       = optional(number),
     config      = optional(map(string)),
     constraints = optional(string),
     machines    = optional(list(string), [])
   })
   nullable = false
-  default = {
-    app_name = "database"
-  }
+  default  = {}
 }
 
 variable "database_backend" {
@@ -85,17 +90,17 @@ variable "database_backend" {
 variable "kiosk" {
   description = "Configuration options for the Slurm kiosk node."
   type = object({
-    app_name    = optional(string),
+    app_name    = optional(string, "login-node"),
+    base        = optional(string),
+    channel     = optional(string),
+    revision    = optional(number),
     units       = optional(number),
     config      = optional(map(string)),
     constraints = optional(string),
     machines    = optional(list(string), [])
   })
   nullable = false
-  default = {
-    app_name = "login-node"
-    units    = 1
-  }
+  default  = {}
 }
 
 variable "model_uuid" {
@@ -107,14 +112,15 @@ variable "model_uuid" {
 variable "rest_api" {
   description = "Configuration options for the Slurm REST API node."
   type = object({
-    app_name    = optional(string),
+    app_name    = optional(string, "rest-api"),
+    base        = optional(string),
+    channel     = optional(string),
+    revision    = optional(number),
     units       = optional(number),
     config      = optional(map(string)),
     constraints = optional(string),
     machines    = optional(list(string), [])
   })
   nullable = false
-  default = {
-    app_name = "rest-api"
-  }
+  default  = {}
 }

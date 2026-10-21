@@ -30,25 +30,29 @@ This module offers the following configurable units:
 
 The `server` object accepts the following properties:
 
-| Name          | Type   | Description                                     | Default         | Required |
-|---------------|--------|-------------------------------------------------|-----------------|:--------:|
-| `app_name`    | string | Name of the server application                  | "lustre-server" |          |
-| `units`       | number | Number of Lustre server units                   | 2               |          |
-| `channel`     | string | Configuration options for the server            | "latest/edge"   |          |
-| `config`      | string | Juju configuration options for the server       | ""              |          |
-| `constraints` | string | Juju constraints for the server                 | ""              |          |
-| `machines`    | array  | Machines where the server nodes are deployed    | `[]`            |          |
+| Name          | Type        | Description                                                                     | Default         | Required |
+|---------------|-------------|---------------------------------------------------------------------------------|-----------------|:--------:|
+| `app_name`    | string      | Name of the server application                                                  | "lustre-server" |          |
+| `base`        | string      | Base operating system for the server. Defaults to the module-level `base`       |                 |          |
+| `channel`     | string      | Charm channel to deploy the server from                                         | "latest/edge"   |          |
+| `config`      | map(string) | Juju configuration options for the server                                       | `{}`            |          |
+| `constraints` | string      | Juju constraints for the server                                                 | ""              |          |
+| `machines`    | array       | Machines where the server nodes are deployed. If set, `units` is ignored        | `[]`            |          |
+| `revision`    | number      | Charm revision to deploy. Null deploys the latest revision on the given channel |                 |          |
+| `units`       | number      | Number of Lustre server units                                                   | 1               |          |
 
 If the `machines` property is set, the `units` variable is ignored.
 
 The `client` object accepts the following properties:
 
-| Name          | Type   | Description                                     | Default         | Required |
-|---------------|--------|-------------------------------------------------|-----------------|:--------:|
-| `app_name`    | string | Name of the client application                  | "lustre-client" |          |
-| `mountpoint`  | string | Path where the filesystem will be mounted       |                 |    Y     |
-| `channel`     | string | Configuration options for the client            | "latest/edge"   |          |
-| `config`      | string | Juju configuration options for the client       | ""              |          |
+| Name         | Type        | Description                                                                     | Default         | Required |
+|--------------|-------------|---------------------------------------------------------------------------------|-----------------|:--------:|
+| `app_name`   | string      | Name of the client application                                                  | "lustre-client" |          |
+| `base`       | string      | Base operating system for the client. Defaults to the module-level `base`       |                 |          |
+| `channel`    | string      | Charm channel to deploy the client from                                         | "latest/edge"   |          |
+| `config`     | map(string) | Juju configuration options for the client                                       | `{}`            |          |
+| `mountpoint` | string      | Path where the filesystem will be mounted                                       |                 |    Y     |
+| `revision`   | number      | Charm revision to deploy. Null deploys the latest revision on the given channel |                 |          |
 
 ### Outputs
 

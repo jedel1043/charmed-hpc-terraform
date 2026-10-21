@@ -15,31 +15,28 @@
 module "lustre-server" {
   source = "git::https://github.com/canonical/filesystem-charms//charms/lustre-server/terraform?ref=0a49f1705d62e4fbb8c52360ad4b2372e8b64214"
 
-  app_name    = var.server.app_name
-  model_uuid  = var.model_uuid
-  base        = var.base
-  channel     = var.server.channel
-  machines    = local.create_machines ? null : var.server.machines
-  units       = local.create_machines ? var.server.units : null
-  config      = var.server.config
-  constraints = var.server.constraints
+  app_name   = local.server.app_name
+  model_uuid = var.model_uuid
+  base       = local.server.base
+
+  channel     = local.server.channel
+  revision    = local.server.revision
+  machines    = local.server.machines
+  units       = local.server.units
+  config      = local.server.config
+  constraints = local.server.constraints
 }
 
 module "filesystem-client" {
   source = "git::https://github.com/canonical/filesystem-charms//charms/filesystem-client/terraform?ref=0a49f1705d62e4fbb8c52360ad4b2372e8b64214"
 
-  app_name   = var.client.app_name
+  app_name   = local.client.app_name
   model_uuid = var.model_uuid
-  base       = var.base
-  channel    = var.client.channel
-  config = merge(
-    {
-      "mountpoint" : var.client.mountpoint
-      # Required for the filesystem-client to mount Lustre filesystems.
-      "enable-lustre" : "true"
-    },
-    var.client.config
-  )
+  base       = local.client.base
+
+  channel  = local.client.channel
+  revision = local.client.revision
+  config   = local.client.config
 }
 
 resource "juju_integration" "lustre" {

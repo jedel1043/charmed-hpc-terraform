@@ -13,5 +13,31 @@
 # limitations under the License.
 
 locals {
+  client = {
+    app_name = var.client.app_name
+    base     = coalesce(var.client.base, var.base)
+    channel  = var.client.channel
+    config = merge(
+      {
+        "mountpoint" : var.client.mountpoint
+        # Required for the filesystem-client to mount Lustre filesystems.
+        "enable-lustre" : "true"
+      },
+      var.client.config
+    )
+    revision = var.client.revision
+  }
+
   create_machines = length(var.server.machines) == 0
+
+  server = {
+    app_name    = var.server.app_name
+    base        = coalesce(var.server.base, var.base)
+    channel     = var.server.channel
+    revision    = var.server.revision
+    units       = local.create_machines ? var.server.units : null
+    machines    = local.create_machines ? null : var.server.machines
+    config      = var.server.config
+    constraints = var.server.constraints
+  }
 }

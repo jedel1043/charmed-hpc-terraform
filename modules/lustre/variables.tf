@@ -23,9 +23,11 @@ variable "client" {
   description = "Configuration options for the filesystem client that mounts the Lustre share."
   type = object({
     app_name   = optional(string, "lustre-client")
+    base       = optional(string)
     channel    = optional(string, "latest/edge")
-    mountpoint = string
     config     = optional(map(string), {})
+    mountpoint = string
+    revision   = optional(number)
   })
   nullable = false
 }
@@ -40,11 +42,13 @@ variable "server" {
   description = "Configuration options for the Lustre server."
   type = object({
     app_name    = optional(string, "lustre-server")
-    units       = optional(number, 1)
+    base        = optional(string)
     channel     = optional(string, "latest/edge")
     config      = optional(map(string), {})
     constraints = optional(string, "")
     machines    = optional(list(string), [])
+    revision    = optional(number)
+    units       = optional(number, 1)
   })
   nullable = false
   default  = {}

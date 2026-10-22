@@ -13,6 +13,16 @@
 # limitations under the License.
 
 locals {
+  component_applications = merge(
+    {
+      sackd      = module.sackd.application
+      slurmctld  = module.slurmctld.application
+      slurmdbd   = module.slurmdbd.application
+      slurmrestd = module.slurmrestd.application
+    },
+    { for name, partition in module.slurmd_partitions : name => partition.application }
+  )
+
   compute_partitions = {
     for name, partition in var.compute_partitions : name => {
       app_name    = name
@@ -57,6 +67,21 @@ locals {
     machines    = length(var.kiosk.machines) == 0 ? null : var.kiosk.machines
     config      = var.kiosk.config
     constraints = var.kiosk.constraints
+  }
+
+  offerable_endpoints = {
+    sackd_metrics_endpoint = {
+      application = module.sackd.application.name
+      endpoint    = "metrics-endpoint"
+    }
+    slurmctld_influxdb = {
+      application = module.slurmctld.application.name
+      endpoint    = "influxdb"
+    }
+    slurmctld_smtp = {
+      application = module.slurmctld.application.name
+      endpoint    = "smtp"
+    }
   }
 
   rest_api = {

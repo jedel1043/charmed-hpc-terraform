@@ -63,8 +63,10 @@ resource "juju_integration" "slurmdbd-to-mysql" {
   }
 
   application {
-    name     = var.database_backend.name
-    endpoint = var.database_backend.endpoint
+    name                = var.database_backend.name
+    endpoint            = var.database_backend.endpoint
+    offer_url           = var.database_backend.offer_url
+    offering_controller = var.database_backend.offering_controller
   }
 }
 

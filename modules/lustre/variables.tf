@@ -38,6 +38,17 @@ variable "model_uuid" {
   nullable    = false
 }
 
+variable "offered_endpoints" {
+  description = <<-EOT
+    Endpoints to expose as cross-model offers, identified by the
+    `<charm_name>_<endpoint>` keys of the `provides` and `requires` outputs.
+    Only `lustre_server_filesystem` can be offered; subordinate and
+    container-scoped endpoints cannot participate in cross-model relations.
+  EOT
+  type        = list(string)
+  default     = []
+}
+
 variable "server" {
   description = "Configuration options for the Lustre server."
   type = object({

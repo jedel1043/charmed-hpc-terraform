@@ -24,6 +24,7 @@ This module offers the following configurable units:
 | Name         | Type   | Description                                     | Default        | Required |
 |--------------|--------|-------------------------------------------------|----------------|:--------:|
 | `model_uuid` | string | UUID of the target Juju model                   |                |    Y     |
+| `offered_endpoints` | list(string) | Endpoints to expose as cross-model offers  | `[]`           |          |
 | `base`       | string | Base operating system for the Lustre charms     | "ubuntu@26.04" |          |
 | `server`     | object | Configuration options for the Lustre server     | `{}`           |          |
 | `client`     | object | Configuration options for the filesystem client |                |    Y     |
@@ -61,7 +62,35 @@ After applying, the module exports the following outputs:
 | Name         | Description                                                                          |
 |--------------|--------------------------------------------------------------------------------------|
 | `app_name`   | Application name for the `filesystem-client` that is ready to mount the Lustre share |
+| `components` | Map of deployed applications, keyed by component name                                |
 | `mountpoint` | Path where the Lustre filesystem is mounted on client machines                       |
+| `offers`     | Map of exposed cross-model offer URLs.                                               |
+| `provides`   | Map of `provides` endpoint names.                                                    |
+| `requires`   | Map of `requires` endpoint names.                                                    |
+
+The `provides` and `requires` outputs expose only the endpoints available for
+external integration. Endpoints that the module wires itself (the relation
+between the Lustre server and the filesystem client) are omitted; use the
+`components` output for the application names to relate against.
+
+The `provides` output exposes the following endpoints:
+
+| Key                        | Endpoint name |
+|----------------------------|---------------|
+| `lustre_server_filesystem` | `filesystem`  |
+
+The `requires` output exposes the following endpoints:
+
+| Key                            | Endpoint name |
+|--------------------------------|---------------|
+| `filesystem_client_juju_info`  | `juju-info`   |
+| `filesystem_client_mount`      | `mount`       |
+
+Set `offered_endpoints` to expose endpoints as cross-model offers, using the
+keys of the `provides` and `requires` outputs as identifiers. The `offers`
+output provides the resulting offer URLs for other models to consume. Only
+`lustre_server_filesystem` can be offered: subordinate and container-scoped
+endpoints (`juju-info`, `mount`) cannot be related across models.
 
 ## Usage
 

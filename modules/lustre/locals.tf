@@ -30,6 +30,13 @@ locals {
 
   create_machines = length(var.server.machines) == 0
 
+  offerable_endpoints = {
+    lustre_server_filesystem = {
+      application = module.lustre-server.application.name
+      endpoint    = "filesystem"
+    }
+  }
+
   server = {
     app_name    = var.server.app_name
     base        = coalesce(var.server.base, var.base)

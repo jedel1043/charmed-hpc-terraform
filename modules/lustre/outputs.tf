@@ -17,7 +17,35 @@ output "app_name" {
   description = "The name of the filesystem client application."
 }
 
+output "components" {
+  description = "Map of deployed applications, keyed by component name."
+  value = {
+    filesystem_client = module.filesystem-client.application
+    lustre_server     = module.lustre-server.application
+  }
+}
+
 output "mountpoint" {
   value       = var.client.mountpoint
   description = "Path where the Lustre filesystem is mounted on client machines."
+}
+
+output "offers" {
+  description = "Map of exposed cross-model offer URLs, keyed by `<charm_name>_<endpoint>`."
+  value       = { for key, offer in juju_offer.offered : key => offer.url }
+}
+
+output "provides" {
+  description = "Map of provides endpoint names available for external integration, keyed by `<charm_name>_<endpoint>`."
+  value = {
+    lustre_server_filesystem = "filesystem"
+  }
+}
+
+output "requires" {
+  description = "Map of requires endpoint names available for external integration, keyed by `<charm_name>_<endpoint>`."
+  value = {
+    filesystem_client_juju_info = "juju-info"
+    filesystem_client_mount     = "mount"
+  }
 }

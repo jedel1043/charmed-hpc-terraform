@@ -15,7 +15,7 @@ This module offers the following configurable units:
 | `compute_partitions`| map(object) | Map of Slurm compute partitions to deploy                         | `{ "compute": { units = 1 } }` |          |
 | `controller`        | object      | Configuration options for the Slurm controller node               | `{ app_name = "controller" }`  |          |
 | `database`          | object      | Configuration options for the Slurm database node                 | `{ app_name = "database" }`    |          |
-| `database_backend`  | object      | Information about the application provisioning the Slurm database |                                |    Y     |
+| `database_backend`  | object      | MySQL backend for the Slurm database. Set `name` + `endpoint` (in-model) or `offer_url` (cross-model offer) | |    Y     |
 | `kiosk`             | object      | Configuration options for the Slurm kiosk node                    | `{ app_name = "login-node" }`  |          |
 | `model_uuid`        | string      | UUID of the target Juju model                                     |                                |    Y     |
 | `rest_api`          | object      | Configuration options for the Slurm REST API node                 | `{ app_name = "rest-api" }`    |          |
@@ -33,6 +33,18 @@ each entry of `compute_partitions` accepts the following keys:
 | `machines`    | list(string) | Machines to place the application on. If set, `units` is ignored.                               |
 | `revision`    | number       | Charm revision to deploy. Null deploys the latest revision on the given channel                 |
 | `units`       | number       | Number of units to deploy when no `machines` are provided (defaults to 1)                       |
+
+The `database_backend` object configures the MySQL-compatible database backing
+the Slurm accounting stack. It accepts the following keys:
+
+| Name                  | Type   | Description                                                                    |
+|-----------------------|--------|--------------------------------------------------------------------------------|
+| `endpoint`            | string | Endpoint of the in-model application. Only needed to disambiguate the relation |
+| `name`                | string | Name of the in-model database application                                      |
+| `offer_url`           | string | URL of a cross-model offer exposing the `mysql_client` interface               |
+| `offering_controller` | string | Name of the controller hosting the offer, when it differs from the target one  |
+
+Set either `name` (in-model backend) or `offer_url` (cross-model backend).
 
 ### Outputs
 

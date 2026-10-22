@@ -79,10 +79,18 @@ variable "database" {
 }
 
 variable "database_backend" {
-  description = "Information about the charm application provisioning the Slurm database."
+  description = <<-EOT
+    MySQL-compatible database backend for the Slurm accounting stack. Set
+    `name` (and `endpoint` only when the application needs disambiguation) to
+    use an in-model application, or `offer_url` to use a cross-model offer.
+    Set `offering_controller` when the offer is hosted on a different
+    controller.
+  EOT
   type = object({
-    name     = string,
-    endpoint = string,
+    name                = optional(string),
+    endpoint            = optional(string),
+    offer_url           = optional(string),
+    offering_controller = optional(string),
   })
   nullable = false
 }
